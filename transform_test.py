@@ -7,10 +7,14 @@ from PIL import Image
 from torch.utils.tensorboard import SummaryWriter
 
 def transform_test():
+    '''
+    图片转tensor
+    '''
     img_path=''
     img=Image.open(img_path)
 
     writer = SummaryWriter('./logs')
+    # 输入PIL，输出tensor
     tensor_totensor = transforms.ToTensor()#将图片转化为tensor类型
     tensor_img = tensor_totensor(img)#tensor_img是一个tensor类型
 
@@ -18,6 +22,9 @@ def transform_test():
     writer.close()
 
 def normalize_test():
+    '''
+        归一化处理
+    '''
     img_path = ''
     img_pil=Image.open(img_path)
     writer = SummaryWriter('./logs')
@@ -33,3 +40,39 @@ def normalize_test():
 
     writer.add_image('noramlize_test',img_nor)
 
+def img_resize():
+    '''
+    图片缩放
+    '''
+    img_path=''
+    img_pil=Image.open(img_path)
+    trans_resize = transforms.Resize(512)
+    # 随机裁剪
+    trans_radom = transforms.RandomCrop(512)
+    # 输入PIL 输出也是PIL
+    resize_img = trans_resize(img_pil)
+    # 之后就是转tensor
+    tensor_totensor = transforms.ToTensor()
+
+    resize_img = tensor_totensor(resize_img)
+
+
+def compose_test():
+    '''
+    Compose中的参数是一个列表
+    数据需要是transofroms类型的对象
+    相当于就是Compose将操作整合，前面的输出会作为后面的输入（这里要注意前面输出的数据类型是否是后面正确的输入类型）
+    '''
+    img_path=''
+    img=Image.open(img_path)
+    trans_resiz=transforms.Resize(512)
+    trans_totensor=transforms.ToTensor()
+    # 实例化transforms.Compose
+    trans_compose=transforms.Compose([trans_resiz,trans_totensor])
+    img_tensor = trans_compose(img)
+    # 结果查看
+    writer = SummaryWriter('./logs')
+    # 参数1：tage;参数2：tensor格式的图片数据；参数3：步数
+    writer.add_image('Image resize and to tensor',img_tensor,0)
+
+    writer.close()
