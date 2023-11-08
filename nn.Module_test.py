@@ -38,7 +38,7 @@ class TestModule(Module):
 def contarinter_test():
     input = torch.tensor(1.0)
     test_module = TestModule()
-
+    #由于torch.nn.Modules  的forward 是__call__方法实现的，所以这里调用的是forward
     out_put=test_module(input)
 
     print(out_put)
